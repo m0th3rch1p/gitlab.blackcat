@@ -1,0 +1,31 @@
+# This is the root application that bootstraps the entire system.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root
+  namespace: argocd
+spec:
+  project: default # The project this application belongs to. 'default' is the built-in project.
+  source: # Source of the application's configuration.
+    repoURL: https://github.com/m0th3rch1p/gitlab.blackcat.git # The github repo url
+    # The path within the repository that this app should manage.
+    # It will look for other Application manifests in this directory.
+    path: apps
+    # Track the latest commit on the main branch.
+    targetRevision: HEAD
+
+  # Destination where the manifests should be deployed.
+  destination:
+    # The target cluster URL. 'https://kubernetes.default.svc' is the standard
+    # address for the cluster where Argo CD is running.
+    server: https://kubernetes.default.svc
+    namespace: argocd
+
+  # Sync policy defines how Argo CD synchronizes the desired state from Git
+  # with the live state of the cluster.
+  syncPolicy:
+    automated:
+      prune: true # delete resources from the cluster if they are removed from Git.
+      selfHeal: true # correct drift to keep the cluster state matching git
+    syncOptions:
+      - CreateNamespace=true

@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-infra
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/m0th3rch1p/gitlab.blackcat.git # The github repo url
+    # This application will deploy all manifests found in the 'infrastructure' directory.
+    path: infrastructure
+    targetRevision: HEAD
+    # This specifies that the source is a directory of plain YAML manifests.
+    directory:
+      recurse: true
+  destination:
+    server: https://kubernetes.default.svc
+    # The manifests deployed by this application will be created in the namespace
+    # specified within each manifest. If a manifest has no namespace, it will
+    # be created in the 'default' namespace.
+    namespace: default
+    
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
