@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudflared-deployment
+  namespace: cloudflare # To be created by Argo CD's CreateNamespace=true option
+spec:
+  replicas: 2 # Running two replicas to provide high availability for the tunnel.
+  selector:
+    matchLabels:
+      app: cloudflared
+  template:
+    metadata:
+      labels:
+        app: cloudflared
+    spec:
+      containers:
+      - name: cloudflared
+        # Use a specific version for reproducibility, preferrably not 'latest'.
+        image: cloudflare/cloudflared:latest
+        args:
+        - tunnel
+        # The config flag points to the file provided by the ConfigMap.
+        - --config
+        - /etc/cloudflared/config.yaml
+        - run
+        livenessProbe:
+          httpGet:
+            path: /ready
+            port: 2000
+          failureThreshold: 1
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        volumeMounts:
+        # Mount for the tunnel credentials secret
+        - name: creds
+          mountPath: /etc/cloudflared/creds
+          readOnly: true
+        # Mount for the configmap
+        - name: config
+          mountPath: /etc/cloudflared
+          readOnly: true
+      volumes:
+      # The secret containing credentials.json, created by the SealedSecrets controller.
+      - name: creds
+        secret:
+          secretName: tunnel-credentials # This MUST match the name of the secret created by your SealedSecret
+      # The configmap defined in the folder
+      - name: config
+        configMap:
+          name: cloudflared-config
+          items:
+          - key: config.yaml
+            path: config.yaml

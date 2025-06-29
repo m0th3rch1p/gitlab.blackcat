@@ -1,0 +1,22 @@
+# infrastructure/cloudflare/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloudflared-config
+  namespace: cloudflare # Ensure this is deployed to the same namespace as the deployment
+data:
+  # config.yaml is the name of the file that will be mounted into the pod.
+  config.yaml:
+    tunnel: 9fbad58b-395e-4c0c-83aa-bbeaac482a85
+    # The credentials file path within the container.
+    credentials-file: /etc/cloudflared/creds/credentials.json
+    ingress:
+      - hostname: gitlab.blackcat.co.ke
+        service: https://traefik.kube-system.svc:443
+      - hostname: '*.apps.blackcat.co.ke' # A wildcard for other potential apps
+        service: https://traefik.kube-system.svc:443
+      # A catch-all to terminate any other requests as the final entry.
+      - service: http_status:404
+    # For k3s, the default CNI doesn't support network policies. If you add a CNI
+    # that does, you might need to add a 'no-tls-verify' line here if you use
+    # the default self-signed certs for internal traffic.

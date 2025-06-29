@@ -33,3 +33,41 @@ The repository is organized to clearly separate the definition of applications f
 * **`bootstrap/`**: Contains the initial manifest to bootstrap the entire GitOps system. This is the only manifest ever applied manually.
 * **`apps/`**: Contains Argo CD `Application` manifests. Each file in this directory defines a deployable component (like `cluster-infra`) and tells Argo CD where to find its configuration source code.
 * **`infrastructure/`**: Contains the actual Kubernetes manifests (Deployments, Services, Helm values, SealedSecrets, etc.) for all the applications defined in `/apps`. This is the directory that holds the desired state of the cluster.
+
+### Architecture
+
+The following diagram illustrates the flow of traffic from a user on the internet to the GitLab application running in the local `k3s` cluster.
+
+```mermaid
+graph TD
+    subgraph Internet
+        User[<i class="fa fa-user"></i> User]
+    end
+
+    subgraph Cloudflare Network
+        DNS[<i class="fa fa-cloud"></i> DNS Resolution <br> yourdomain.com]
+        Edge[<i class="fa fa-shield-alt"></i> Cloudflare Edge <br> (DDoS/WAF/TLS)]
+    end
+
+    subgraph "Local k3s Cluster (Your Machine)"
+        subgraph "cloudflare Namespace"
+            Tunnel[<i class="fa fa-project-diagram"></i> cloudflared Pod]
+        end
+        subgraph "kube-system Namespace"
+            TraefikSvc[<i class="fa fa-network-wired"></i> Traefik Service]
+        end
+        subgraph "gitlab Namespace"
+            GitLabIngress[<i class="fa fa-route"></i> GitLab Ingress]
+            GitLabSvc[<i class="fa fa-network-wired"></i> GitLab Service]
+            GitLabPod[<i class="fa fa-server"></i> GitLab Pod]
+        end
+    end
+
+    User -- "1. Accesses gitlab.blackcat.co.ke" --> DNS
+    DNS -- "2. Resolves to Cloudflare IP" --> Edge
+    Edge -- "3. Secure Outbound Tunnel" --> Tunnel
+    Tunnel -- "4. Forwards traffic internally" --> TraefikSvc
+    TraefikSvc -- "5. Routes based on Ingress" --> GitLabIngress
+    GitLabIngress -- "6. Points to Service" --> GitLabSvc
+    GitLabSvc -- "7. Load Balances to Pod" --> GitLabPod
+```
