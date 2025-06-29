@@ -18,6 +18,7 @@ The workflow is as follows:
 
 The repository is organized to clearly separate the definition of applications from their configuration.
 
+```
 .
 ├── apps/
 │   ├── cluster-infra.yaml
@@ -29,6 +30,7 @@ The repository is organized to clearly separate the definition of applications f
 │   ├── cloudflare/
 │   └── gitlab/
 └── README.md
+```
 
 * **`bootstrap/`**: Contains the initial manifest to bootstrap the entire GitOps system. This is the only manifest ever applied manually.
 * **`apps/`**: Contains Argo CD `Application` manifests. Each file in this directory defines a deployable component (like `cluster-infra`) and tells Argo CD where to find its configuration source code.
