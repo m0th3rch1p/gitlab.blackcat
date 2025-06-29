@@ -47,7 +47,7 @@ graph TD
         DNS["🌐 DNS Resolution<br>blackcat.co.ke"]
         Edge["🛡️ Cloudflare Edge<br>(DDoS/WAF/TLS)"]
     end
-    subgraph "Local k3s Cluster (Your Machine)"
+    subgraph "Local k3s Cluster"
         subgraph "cloudflare Namespace"
             Tunnel["🔗 cloudflared Pod"]
         end
