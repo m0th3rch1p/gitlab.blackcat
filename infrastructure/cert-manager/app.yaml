@@ -11,9 +11,9 @@ spec:
     chart: cert-manager
     # Pinning a specific version is crucial for production-grade stability.
     targetRevision: v1.18.1
-    helm: |
+    helm: 
       # These values are passed to the Helm chart.
-      values:
+      values: |
         # This is a critical setting. It tells Helm to install the
         # Custom Resource Definitions (CRDs) like Certificate, Issuer, etc.
         installCRDs: true
