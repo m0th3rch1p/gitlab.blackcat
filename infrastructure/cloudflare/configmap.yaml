@@ -6,7 +6,7 @@ metadata:
   namespace: cloudflare # Ensure this is deployed to the same namespace as the deployment
 data:
   # config.yaml is the name of the file that will be mounted into the pod.
-  config.yaml:
+  config.yaml: |
     tunnel: 9fbad58b-395e-4c0c-83aa-bbeaac482a85
     # The credentials file path within the container.
     credentials-file: /etc/cloudflared/creds/credentials.json
