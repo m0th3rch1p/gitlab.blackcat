@@ -41,25 +41,25 @@ The following diagram illustrates the flow of traffic from a user on the interne
 ```mermaid
 graph TD
     subgraph Internet
-        User[User]
+        User["fa:fa-user User"]
     end
 
     subgraph "Cloudflare Network"
-        DNS[DNS Resolution\nyourdomain.com]
-        Edge[Cloudflare Edge\n(DDoS/WAF/TLS)]
+        DNS["fa:fa-cloud DNS Resolution<br>blackcat.co.ke"]
+        Edge["fa:fa-shield-alt Cloudflare Edge<br>(DDoS/WAF/TLS)"]
     end
 
     subgraph "Local k3s Cluster (Your Machine)"
         subgraph "cloudflare Namespace"
-            Tunnel[cloudflared Pod]
+            Tunnel["fa:fa-project-diagram cloudflared Pod"]
         end
         subgraph "kube-system Namespace"
-            TraefikSvc[Traefik Service]
+            TraefikSvc["fa:fa-network-wired Traefik Service"]
         end
         subgraph "gitlab Namespace"
-            GitLabIngress[GitLab Ingress]
-            GitLabSvc[GitLab Service]
-            GitLabPod[GitLab Pod]
+            GitLabIngress["fa:fa-route GitLab Ingress"]
+            GitLabSvc["fa:fa-network-wired GitLab Service"]
+            GitLabPod["fa:fa-server GitLab Pod"]
         end
     end
 
@@ -70,5 +70,4 @@ graph TD
     TraefikSvc -- "5. Routes based on Ingress" --> GitLabIngress
     GitLabIngress -- "6. Points to Service" --> GitLabSvc
     GitLabSvc -- "7. Load Balances to Pod" --> GitLabPod
-
 ```
