@@ -39,15 +39,14 @@ spec:
               kubernetes.io/ingress.class: "traefik"
 
           # Persistence
-          # Changed to local-path(rancher)
+          # Longhorn
           persistence:
-            storageClass: local-path
+            storageClass: longhorn
 
           # Secrets Config
           # Define the names of the secrets manually
           # to prevent the chart from auto-generating them.
           psql:
-            upgrade: false
             password:
               secret: gitlab-postgresql-password
               key: password
@@ -64,6 +63,8 @@ spec:
         # Disable Non-Essential Components
         # that are not core to the GitLab experience
         # or that we provide ourselves.
+        upgradeCheck:
+          enabled: false # Disable upgrade check for new installations.
         nginx-ingress:
           enabled: false # We use Traefik instead.
         prometheus:
