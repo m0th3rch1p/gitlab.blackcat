@@ -71,3 +71,48 @@ graph TD
     GitLabIngress -- "6. Points to Service" --> GitLabSvc
     GitLabSvc -- "7. Load Balances to Pod" --> GitLabPod
 ```
+
+## Observability
+
+To provide operational insight into the cluster and the GitLab application, this project deploys a resilient observability stack for metrics and logging, managed entirely via GitOps.
+
+### Technology Stack & Architecture
+
+* **Metrics:**
+  * **Prometheus:** Deployed via the `kube-prometheus-stack` chart. It automatically discovers and scrapes metrics from all cluster components and GitLab. Metrics are stored on a **persistent volume**, ensuring data survives pod restarts and redeployments.
+  * **Grafana:** Provides visualization for all Prometheus metrics.
+
+* **Logging:**
+  * **Loki:** The central log aggregation system with a persistent volume for log storage.
+  * **Promtail:** Deployed as a `DaemonSet`, it automatically discovers all pods, collects their logs, and forwards them to Loki.
+
+### How to Access Grafana
+
+1. **Retrieve the Admin Password:** The Grafana administrator password is automatically generated and stored securely in the cluster. Run the following command to retrieve it:
+
+    ```bash
+    kubectl get secret grafana-admin-credentials -n monitoring -o jsonpath='{.data.admin-password}' | base64 --decode ; echo
+    ```
+
+2. **Forward the Port:** Run the following command in your terminal. It will remain active as long as the command is running.
+
+    ```bash
+    kubectl port-forward svc/monitoring-grafana -n monitoring 8080:80
+    ```
+
+3. **Open in Browser:** Navigate to `http://localhost:8111`.
+
+4. **Log In:**
+    * **Username:** `admin`
+    * **Password:** Use the password you retrieved from the command in Step 1.
+
+### What to Explore
+
+Once logged in, you can explore the health of the entire system:
+
+1. **Kubernetes Dashboards:** Navigate to `Dashboards` -> `Browse`. You will find pre-built dashboards for monitoring overall cluster health, node resource usage, and individual pod performance.
+2. **GitLab Metrics:** Look for dashboards related to GitLab to see application-specific metrics.
+3. **Explore Logs with Loki:**
+    * On the left-hand menu, click the "Explore" compass icon.
+    * At the top, select the **"Loki"** data source.
+    * You can now run queries to see logs from any application. For example, to see the logs for the GitLab web application, use the LogQL query: `{namespace="gitlab", app="webservice"}`.

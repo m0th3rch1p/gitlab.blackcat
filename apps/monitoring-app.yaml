@@ -1,0 +1,97 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: monitoring
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://prometheus-community.github.io/helm-charts
+    chart: kube-prometheus-stack
+    targetRevision: "27.23.0" # Pinning to most recent, stable version
+    helm:
+      # These values configure the stack for a low-resource environment
+      # and integrate it with our existing components.
+      values: |
+        # =========================================================================
+        # Production-Grade Observability Configuration
+        # =========================================================================
+
+        # Global Settings & Component Disabling
+        alertmanager:
+          enabled: false
+        thanosRuler:
+          enabled: false
+
+        # Grafana Config
+        grafana:
+          admin:
+            existingSecret: "grafana-admin-credentials"
+            userKey: "admin-user"
+            passwordKey: "admin-password"
+          
+          # Persist dashboards and settings using the default k3s storageclass
+          persistence:
+            enabled: true
+            type: pvc
+            storageClassName: "longhorn"
+            size: 2Gi 
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 100m
+              memory: 256Mi
+
+        # Prometheus Configuration
+        prometheus:
+          prometheusSpec:
+            # Discover ServiceMonitors across all relevant namespaces.
+            serviceMonitorNamespaceSelector:
+              matchNames:
+              - gitlab
+              - monitoring
+            serviceMonitorSelector: {} # Empty uses all selectors
+            
+            # Reduce resource footprint for portfolio environment
+            resources:
+              requests:
+                cpu: 250m
+                memory: 768Mi
+              limits:
+                cpu: 750m
+                memory: 1.5Gi
+            
+            # Configure persistent storage for metrics.
+            storageSpec:
+              volumeClaimTemplate:
+                spec:
+                  storageClassName: longhorn
+                  accessModes: ["ReadWriteOnce"]
+                  resources:
+                    requests:
+                      storage: 10Gi
+            # Set a reasonable retention period for the data on the volume.
+            retention: 15d
+
+        # Other Component Resource Tuning
+        kube-state-metrics:
+          resources:
+            requests:
+              cpu: 20m
+              memory: 128Mi
+        prometheus-node-exporter:
+          resources:
+            requests:
+              cpu: 20m
+              memory: 64Mi
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

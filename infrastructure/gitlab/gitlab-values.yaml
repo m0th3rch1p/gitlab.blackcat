@@ -46,6 +46,8 @@ global:
 # Disable Non-Essential Components
 # that are not core to the GitLab experience
 # or that we provide ourselves.
+upgradeCheck:
+  enabled: false # Disable upgrade check for new installations.
 nginx-ingress:
   enabled: false # We use Traefik instead.
 prometheus:

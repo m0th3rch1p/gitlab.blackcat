@@ -1,0 +1,55 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: logging
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://grafana.github.io/helm-charts
+    chart: loki-stack
+    targetRevision: "2.10.2" # Pinning to a recent, stable version
+    helm:
+      values: |
+        # This chart bundles Loki, Promtail, and configures Grafana.
+        # We will configure it for a simple, single-binary deployment.
+
+        # Loki (Log Storage) Config
+        loki:
+          # Run in simple, single-binary mode. Not for production scale.
+          isSimplestScalableMode: false
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 300m
+              memory: 512Mi
+          persistence:
+            enabled: true
+            storageClassName: "longhorn"
+            size: 5Gi
+
+        # Promtail (Log Collector) Config
+        # Promtail runs as a DaemonSet to collect logs from every node.
+        promtail:
+          resources:
+            requests:
+              cpu: 20m
+              memory: 64Mi
+
+        # --- 3. Grafana ---
+        # We don't need the Grafana instance from this chart, as we
+        # are using the one from the kube-prometheus-stack.
+        grafana:
+          enabled: false
+  destination:
+    server: https://kubernetes.default.svc
+    # Deploy the logging stack into the same namespace as monitoring for simplicity.
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
