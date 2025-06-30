@@ -13,8 +13,12 @@ data:
     ingress:
       - hostname: gitlab.blackcat.co.ke
         service: https://traefik.kube-system.svc:443
+        originRequest:
+          noTLSVerify: true
       - hostname: '*.apps.blackcat.co.ke' # A wildcard for other potential apps
         service: https://traefik.kube-system.svc:443
+        originRequest:
+          noTLSVerify: true
       # A catch-all to terminate any other requests as the final entry.
       - service: http_status:404
     # For k3s, the default CNI doesn't support network policies. If you add a CNI
