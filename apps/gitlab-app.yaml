@@ -39,9 +39,9 @@ spec:
               kubernetes.io/ingress.class: "traefik"
 
           # Persistence
-          # We use longhorn storage provisioner.
+          # Changed to local-path(rancher)
           persistence:
-            storageClass: longhorn
+            storageClass: local-path
 
           # Secrets Config
           # Define the names of the secrets manually
