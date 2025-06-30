@@ -7,7 +7,7 @@ spec:
   project: default
   source:
     # The official GitLab Helm chart repository.
-    repoURL: https://charts.gitlab.com/
+    repoURL: https://charts.gitlab.io/
     chart: gitlab
     targetRevision: "9.1.1" 
 
