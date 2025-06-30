@@ -47,6 +47,7 @@ spec:
           # Define the names of the secrets manually
           # to prevent the chart from auto-generating them.
           psql:
+            upgrade: false
             password:
               secret: gitlab-postgresql-password
               key: password
