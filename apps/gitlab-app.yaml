@@ -80,6 +80,11 @@ spec:
         # Resource Tuning (CRITICAL for local clusters)
         # The webservice is the main GitLab web application.
           webservice:
+            rails:
+              trusted_proxies:
+                - 10.42.0.0/16
+                - 10.43.0.0/16
+
             resources:
               requests:
                 cpu: 150m
