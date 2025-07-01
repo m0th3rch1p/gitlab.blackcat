@@ -27,6 +27,8 @@ spec:
 
             domain: blackcat.co.ke
             https: true
+            gitlab:
+              name: gitlab.blackcat.co.ke
           ingress:
             # Using the default Traefik that comes with k3s.
             configureCertmanager: false 
