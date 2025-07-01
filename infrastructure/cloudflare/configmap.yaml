@@ -12,11 +12,11 @@ data:
     credentials-file: /etc/cloudflared/creds/credentials.json
     ingress:
       - hostname: gitlab.blackcat.co.ke
-        service: https://traefik.kube-system.svc:443
+        service: https://10.43.244.163:443
         originRequest:
           noTLSVerify: true
       - hostname: '*.apps.blackcat.co.ke' # A wildcard for other potential apps
-        service: https://traefik.kube-system.svc:443
+        service: https://10.43.244.163:443
         originRequest:
           noTLSVerify: true
       # A catch-all to terminate any other requests as the final entry.
