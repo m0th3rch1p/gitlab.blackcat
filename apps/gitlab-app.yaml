@@ -98,7 +98,7 @@ spec:
             resources:
               requests:
                 cpu: 100m
-                memory: 600Mi
+                memory: 1024Mi
         # Gitaly handles Git repository access.
         gitaly:
           resources:
