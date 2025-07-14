@@ -42,9 +42,9 @@ spec:
               kubernetes.io/ingress.class: "traefik"
 
           # Persistence
-          # Longhorn
+          # Rancher
           persistence:
-            storageClass: longhorn
+            storageClass: local-path
 
           # Secrets Config
           # Define the names of the secrets manually
