@@ -82,6 +82,7 @@ spec:
         # Resource Tuning (CRITICAL for local clusters)
         # The webservice is the main GitLab web application.
           webservice:
+            replicaCount: 1
             rails:
               trusted_proxies:
                 - 10.42.0.0/16
