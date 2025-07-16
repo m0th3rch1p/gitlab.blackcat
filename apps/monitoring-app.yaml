@@ -50,7 +50,8 @@ spec:
             # Discover ServiceMonitors across all relevant namespaces.
             serviceMonitorNamespaceSelector:
               matchNames:
-              - gitlab
+              - windmill
+              - forgejo
               - monitoring
             serviceMonitorSelector: {} # Empty uses all selectors
             

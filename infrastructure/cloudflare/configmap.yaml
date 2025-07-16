@@ -11,7 +11,7 @@ data:
     # The credentials file path within the container.
     credentials-file: /etc/cloudflared/creds/credentials.json
     ingress:
-      - hostname: gitlab.blackcat.co.ke
+      - hostname: forgejo.blackcat.co.ke
         service: https://10.43.244.163:443
         originRequest:
           noTLSVerify: true
