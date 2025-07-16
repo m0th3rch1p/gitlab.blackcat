@@ -1,0 +1,28 @@
+# This configures Forgejo to be accessible via our existing Traefik Ingress.
+forgejo:
+  database:
+    type: sqlite3
+  ingress:
+    enabled: true
+    className: "traefik" # Use our existing Traefik IngressClass
+    hosts:
+      - host: forgejo.blackcat.co.ke
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      - secretName: forgejo-tls # Cert-Manager will create this secret
+        hosts:
+          - forgejo.blackcat.co.ke
+    annotations:
+      # Tell Cert-Manager to issue a certificate for this Ingress
+      cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  
+  # Use a persistent volume for data storage.
+  persistence:
+    enabled: true
+    storageClass: "local-path"
+    size: 10Gi
+
+  postgresql:
+    enabled: false

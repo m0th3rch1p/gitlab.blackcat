@@ -1,0 +1,29 @@
+# apps/forgejo-app.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: forgejo
+  namespace: argocd
+spec:
+  project: default
+  source:
+    # We use the Gitea Helm chart, as Forgejo maintains compatibility.
+    repoURL: oci://code.forgejo.org/forgejo-helm
+    chart: forgejo
+    targetRevision: "12.5.4" # A recent, stable version of the chart
+    helm:
+      # Tell Argo CD where to find our values file within our Git repository.
+      valueFiles:
+        - values.yaml  
+  # Tell Argo CD to look for our configuration in the 'infrastructure/forgejo' directory
+  # of our Git repository. This is a cleaner pattern than embedding values directly.
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: forgejo
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
