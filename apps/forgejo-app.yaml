@@ -8,10 +8,11 @@ spec:
   project: default
   source:
     # We use the Forgejo Helm chart.
-    repoURL: https://code.forgejo.org/forgejo-helm/forgejo-helm
+    repoURL: oci://code.forgejo.org/forgejo-helm
     chart: forgejo-helm
     targetRevision: "12.5.4" # A recent, stable version of the chart
     helm:
+      enableOCI: true   # ensure usage of OCI
       # Tell Argo CD where to find our values file within our Git repository.
       valueFiles:
         - values.yaml  
