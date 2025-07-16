@@ -8,8 +8,8 @@ spec:
   project: default
   source:
     # We use the Forgejo Helm chart.
-    repoURL: https://code.forgejo.org/forgejo-helm/forgejo-helm
-    chart: forgejo-helm
+    repoURL: https://codeberg.org/forgejo/forgejo
+    chart: forgejo
     targetRevision: "12.5.4" # A recent, stable version of the chart
     helm:
       # Tell Argo CD where to find our values file within our Git repository.
