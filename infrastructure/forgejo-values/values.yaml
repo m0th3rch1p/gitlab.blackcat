@@ -1,3 +1,10 @@
+# helm template forgejo oci://code.forgejo.org/forgejo-helm/forgejo \
+#   --version 12.5.4 \
+#   --namespace forgejo \
+#   --create-namespace \
+#   --values infrastructure/forgejo/values.yaml \
+#   > /tmp/forgejo-manifests/forgejo.yaml
+
 # This configures Forgejo to be accessible via our existing Traefik Ingress.
 forgejo:
   database:

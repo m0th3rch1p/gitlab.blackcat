@@ -8,40 +8,9 @@ spec:
   project: default
   source:
     # We use the Forgejo Helm chart.
-    repoURL: oci://code.forgejo.org/forgejo-helm
-    chart: forgejo
-    targetRevision: "12.5.4" # A recent, stable version of the chart
-    helm:
-      enableOCI: true
-      # Tell Argo CD where to find our values file within our Git repository.
-      values: |
-      forgejo:
-        database:
-          type: sqlite3
-        ingress:
-          enabled: true
-          className: "traefik" # Use our existing Traefik IngressClass
-          hosts:
-            - host: forgejo.blackcat.co.ke
-              paths:
-                - path: /
-                  pathType: Prefix
-          tls:
-            - secretName: forgejo-tls # Cert-Manager will create this secret
-              hosts:
-                - forgejo.blackcat.co.ke
-          annotations:
-            # Tell Cert-Manager to issue a certificate for this Ingress
-            cert-manager.io/cluster-issuer: "letsencrypt-prod"
-        
-        # Use a persistent volume for data storage.
-        persistence:
-          enabled: true
-          storageClass: "local-path"
-          size: 10Gi
-      
-        postgresql:
-          enabled: false       
+    repoURL: https://github.com/m0th3rch1p/gitlab.blackcat.git
+    path: infrastructure/forgejo
+    targetRevision: Head
   destination:
     server: https://kubernetes.default.svc
     namespace: forgejo
