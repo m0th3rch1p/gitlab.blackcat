@@ -8,7 +8,7 @@ spec:
   project: default
   source:
     # We use the Forgejo Helm chart.
-    repoURL: https://github.com/m0th3rch1p/gitlab.blackcat.git
+    # repoURL: https://github.com/m0th3rch1p/gitlab.blackcat.git
     chart: oci://code.forgejo.org/forgejo-helm/forgejo
     targetRevision: "12.5.4" # A recent, stable version of the chart
     helm:
