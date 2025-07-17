@@ -8,13 +8,10 @@ spec:
   project: default
   source:
     # We use the Forgejo Helm chart.
-    repoURL: https://github.com/m0th3rch1p/gitlab.blackcat.git
-    # The path in your Git repo where the values.yaml is located.
-    path: infrastructure/forgejo
+    repoURL: https://codeberg.org/forgejo/forgejo
     chart: oci://code.forgejo.org/forgejo-helm/forgejo
     targetRevision: "12.5.4" # A recent, stable version of the chart
     helm:
-      enableOCI: true   # ensure usage of OCI
       # Tell Argo CD where to find our values file within our Git repository.
       valueFiles:
         - values.yaml  
