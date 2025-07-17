@@ -12,6 +12,7 @@ spec:
     chart: forgejo
     targetRevision: "12.5.4" # A recent, stable version of the chart
     helm:
+      enableOCI: true
       # Tell Argo CD where to find our values file within our Git repository.
       values: |
       forgejo:
