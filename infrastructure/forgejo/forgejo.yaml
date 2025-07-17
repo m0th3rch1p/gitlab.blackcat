@@ -3707,7 +3707,7 @@ metadata:
     app.kubernetes.io/component: postgresql
     role: data
 spec:
-  replicas: 3
+  replicas: 1
   podManagementPolicy: "Parallel"
   serviceName: forgejo-postgresql-ha-postgresql-headless
   updateStrategy:
@@ -3971,7 +3971,7 @@ spec:
     matchLabels:
       app.kubernetes.io/instance: forgejo
       app.kubernetes.io/name: redis-cluster
-  replicas: 3
+  replicas: 1
   serviceName: forgejo-redis-cluster-headless
   podManagementPolicy: Parallel
   template:
