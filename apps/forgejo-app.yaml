@@ -10,7 +10,7 @@ spec:
     # We use the Forgejo Helm chart.
     repoURL: https://github.com/m0th3rch1p/gitlab.blackcat.git
     path: infrastructure/forgejo
-    targetRevision: Head
+    targetRevision: HEAD
   destination:
     server: https://kubernetes.default.svc
     namespace: forgejo
